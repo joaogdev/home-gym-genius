@@ -9,7 +9,364 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      ai_feedback: {
+        Row: {
+          created_at: string | null
+          feedback_text: string | null
+          feedback_type: string | null
+          id: string
+          plan_id: string | null
+          rating: number | null
+          suggestions: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          feedback_text?: string | null
+          feedback_type?: string | null
+          id?: string
+          plan_id?: string | null
+          rating?: number | null
+          suggestions?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          feedback_text?: string | null
+          feedback_type?: string | null
+          id?: string
+          plan_id?: string | null
+          rating?: number | null
+          suggestions?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      diet_plans: {
+        Row: {
+          calories_target: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          macros: Json | null
+          plan_data: Json
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          calories_target?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          macros?: Json | null
+          plan_data: Json
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          calories_target?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          macros?: Json | null
+          plan_data?: Json
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      diet_sessions: {
+        Row: {
+          completed: boolean | null
+          created_at: string | null
+          date: string
+          diet_plan_id: string | null
+          id: string
+          meals_completed: Json
+          notes: string | null
+          satisfaction_rating: number | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string | null
+          date: string
+          diet_plan_id?: string | null
+          id?: string
+          meals_completed: Json
+          notes?: string | null
+          satisfaction_rating?: number | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string | null
+          date?: string
+          diet_plan_id?: string | null
+          id?: string
+          meals_completed?: Json
+          notes?: string | null
+          satisfaction_rating?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "diet_sessions_diet_plan_id_fkey"
+            columns: ["diet_plan_id"]
+            isOneToOne: false
+            referencedRelation: "diet_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          message: string
+          notification_type: string | null
+          read_at: string | null
+          scheduled_for: string | null
+          sent_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          message: string
+          notification_type?: string | null
+          read_at?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          message?: string
+          notification_type?: string | null
+          read_at?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          id: string
+          plan_type: string
+          status: string | null
+          stripe_payment_intent_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          plan_type: string
+          status?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          id?: string
+          plan_type?: string
+          status?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          activity_level: string | null
+          age: number | null
+          available_equipment: Json | null
+          created_at: string | null
+          dietary_preferences: Json | null
+          fitness_goal: string | null
+          full_name: string | null
+          gender: string | null
+          height: number | null
+          id: string
+          plan_type: string | null
+          updated_at: string | null
+          weight: number | null
+        }
+        Insert: {
+          activity_level?: string | null
+          age?: number | null
+          available_equipment?: Json | null
+          created_at?: string | null
+          dietary_preferences?: Json | null
+          fitness_goal?: string | null
+          full_name?: string | null
+          gender?: string | null
+          height?: number | null
+          id: string
+          plan_type?: string | null
+          updated_at?: string | null
+          weight?: number | null
+        }
+        Update: {
+          activity_level?: string | null
+          age?: number | null
+          available_equipment?: Json | null
+          created_at?: string | null
+          dietary_preferences?: Json | null
+          fitness_goal?: string | null
+          full_name?: string | null
+          gender?: string | null
+          height?: number | null
+          id?: string
+          plan_type?: string | null
+          updated_at?: string | null
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      user_progress: {
+        Row: {
+          body_measurements: Json | null
+          created_at: string | null
+          date: string
+          id: string
+          notes: string | null
+          progress_photos: string[] | null
+          user_id: string
+          weight: number | null
+        }
+        Insert: {
+          body_measurements?: Json | null
+          created_at?: string | null
+          date: string
+          id?: string
+          notes?: string | null
+          progress_photos?: string[] | null
+          user_id: string
+          weight?: number | null
+        }
+        Update: {
+          body_measurements?: Json | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          notes?: string | null
+          progress_photos?: string[] | null
+          user_id?: string
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      workout_plans: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          difficulty_level: string | null
+          duration_weeks: number | null
+          id: string
+          is_active: boolean | null
+          plan_data: Json
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_weeks?: number | null
+          id?: string
+          is_active?: boolean | null
+          plan_data: Json
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_weeks?: number | null
+          id?: string
+          is_active?: boolean | null
+          plan_data?: Json
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      workout_sessions: {
+        Row: {
+          completed: boolean | null
+          created_at: string | null
+          date: string
+          difficulty_rating: number | null
+          duration_minutes: number | null
+          exercises_completed: Json
+          id: string
+          notes: string | null
+          user_id: string
+          workout_plan_id: string | null
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string | null
+          date: string
+          difficulty_rating?: number | null
+          duration_minutes?: number | null
+          exercises_completed: Json
+          id?: string
+          notes?: string | null
+          user_id: string
+          workout_plan_id?: string | null
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string | null
+          date?: string
+          difficulty_rating?: number | null
+          duration_minutes?: number | null
+          exercises_completed?: Json
+          id?: string
+          notes?: string | null
+          user_id?: string
+          workout_plan_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workout_sessions_workout_plan_id_fkey"
+            columns: ["workout_plan_id"]
+            isOneToOne: false
+            referencedRelation: "workout_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
