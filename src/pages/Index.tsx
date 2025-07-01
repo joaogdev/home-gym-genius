@@ -24,7 +24,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header userName="Maria" />
+      <Header />
       
       <div className="max-w-md mx-auto pb-safe-bottom">
         {/* Quote motivacional */}
