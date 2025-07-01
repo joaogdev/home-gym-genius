@@ -1,139 +1,120 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
-import MotivationalQuote from '@/components/MotivationalQuote';
-import QuickActions from '@/components/QuickActions';
 import StatsCard from '@/components/StatsCard';
 import WorkoutCard from '@/components/WorkoutCard';
-import { Activity, Clock, Target, TrendingUp, LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import ProgressChart from '@/components/ProgressChart';
+import QuickActions from '@/components/QuickActions';
+import MotivationalQuote from '@/components/MotivationalQuote';
+import { Calendar, Heart, Clock, User } from 'lucide-react';
 
 const Index = () => {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const handleLogout = async () => {
-    const { error } = await signOut();
-    if (error) {
-      toast({
-        title: "Erro",
-        description: "Erro ao fazer logout. Tente novamente.",
-        variant: "destructive"
-      });
-    } else {
-      toast({
-        title: "Logout realizado",
-        description: "Até logo!",
-      });
-      navigate('/auth');
-    }
-  };
+  // Dados simulados
+  const progressData = [
+    { date: '01/12', weight: 75 },
+    { date: '08/12', weight: 74.5 },
+    { date: '15/12', weight: 74 },
+    { date: '22/12', weight: 73.5 },
+    { date: '29/12', weight: 73 },
+  ];
 
   const handleStartWorkout = () => {
     console.log('Iniciando treino...');
-    toast({
-      title: "Treino iniciado!",
-      description: "Boa sorte no seu treino!",
-    });
   };
 
-  const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário';
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
-      <Header userName={userName} />
+    <div className="min-h-screen bg-background">
+      <Header userName="Maria" />
       
-      <main className="pb-20">
-        <MotivationalQuote />
-        
+      <div className="max-w-md mx-auto pb-safe-bottom">
+        {/* Quote motivacional */}
+        <div className="pt-6">
+          <MotivationalQuote />
+        </div>
+
+        {/* Ações rápidas */}
         <QuickActions />
-        
-        {/* Stats Section */}
-        <section className="px-4 mb-8">
-          <h2 className="text-xl font-bold text-white mb-4">Suas Estatísticas</h2>
-          <div className="grid grid-cols-2 gap-4">
+
+        {/* Stats principais */}
+        <div className="px-4 mb-8">
+          <h2 className="text-xl font-bold text-white mb-4">Seu Progresso</h2>
+          <div className="grid grid-cols-2 gap-4 mb-4">
             <StatsCard
-              title="Treinos na Semana"
-              value="3"
-              subtitle="+1 da semana passada"
-              icon={Activity}
+              title="Peso Atual"
+              value="73kg"
+              subtitle="-2kg este mês"
+              icon={User}
               trend="up"
             />
             <StatsCard
-              title="Tempo Total"
-              value="5h 30m"
-              subtitle="Esta semana"
-              icon={Clock}
+              title="Treinos"
+              value="12"
+              subtitle="Este mês"
+              icon={Calendar}
               gradient="bg-card-gradient"
             />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
             <StatsCard
-              title="Meta Mensal"
-              value="75%"
-              subtitle="12/16 treinos"
-              icon={Target}
+              title="Calorias"
+              value="2.1k"
+              subtitle="Queimadas hoje"
+              icon={Heart}
               gradient="bg-success-gradient"
-              trend="up"
             />
             <StatsCard
-              title="Progresso"
-              value="+2.5kg"
-              subtitle="Último mês"
-              icon={TrendingUp}
-              gradient="bg-fitness-gradient"
-              trend="up"
+              title="Tempo"
+              value="45min"
+              subtitle="Média por treino"
+              icon={Clock}
+              gradient="bg-gradient-to-r from-purple-600 to-pink-600"
             />
           </div>
-        </section>
+        </div>
 
-        {/* Workout Plans Section */}
-        <section className="px-4 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">Treinos Recomendados</h2>
-          </div>
+        {/* Gráfico de progresso */}
+        <div className="px-4 mb-8">
+          <ProgressChart 
+            data={progressData} 
+            title="Evolução do Peso" 
+          />
+        </div>
+
+        {/* Treinos recomendados */}
+        <div className="px-4 mb-8">
+          <h2 className="text-xl font-bold text-white mb-4">Treinos para Hoje</h2>
           <div className="space-y-4">
             <WorkoutCard
-              title="Treino de Peito e Tríceps"
-              duration="45 min"
+              title="Treino HIIT Iniciante"
+              duration="20 min"
               exercises={8}
-              difficulty="Médio"
-              category="Força"
-              onStart={handleStartWorkout}
-            />
-            <WorkoutCard
-              title="Cardio Intervalado"
-              duration="30 min"
-              exercises={6}
-              difficulty="Difícil"
-              category="Cardio"
-              onStart={handleStartWorkout}
-            />
-            <WorkoutCard
-              title="Yoga Relaxante"
-              duration="25 min"
-              exercises={10}
               difficulty="Fácil"
-              category="Flexibilidade"
+              category="Queima de Gordura"
+              onStart={handleStartWorkout}
+            />
+            <WorkoutCard
+              title="Força para Membros Superiores"
+              duration="35 min"
+              exercises={12}
+              difficulty="Médio"
+              category="Ganho de Massa"
+              onStart={handleStartWorkout}
+            />
+            <WorkoutCard
+              title="Treino de Resistência"
+              duration="40 min"
+              exercises={15}
+              difficulty="Difícil"
+              category="Condicionamento"
               onStart={handleStartWorkout}
             />
           </div>
-        </section>
+        </div>
 
-        {/* Logout Button */}
-        <section className="px-4 mb-8">
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="w-full flex items-center gap-2 text-muted-foreground hover:text-white border-border hover:bg-card/50"
-          >
-            <LogOut className="w-4 h-4" />
-            Sair da Conta
-          </Button>
-        </section>
-      </main>
+        {/* Footer space para navegação mobile */}
+        <div className="h-20"></div>
+      </div>
     </div>
   );
 };
