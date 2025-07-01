@@ -28,9 +28,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('Configurando listener de autenticação...');
+    
     // Configurar listener de mudanças de autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Evento de autenticação:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -39,15 +42,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Verificar sessão existente
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Sessão existente encontrada:', session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      console.log('Removendo listener de autenticação');
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string, fullName?: string) => {
+    console.log('Iniciando cadastro para:', email);
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
@@ -56,24 +64,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       options: {
         emailRedirectTo: redirectUrl,
         data: {
-          full_name: fullName
+          full_name: fullName || ''
         }
       }
     });
+    
+    if (error) {
+      console.error('Erro no cadastro:', error);
+    } else {
+      console.log('Cadastro iniciado com sucesso');
+    }
     
     return { error };
   };
 
   const signIn = async (email: string, password: string) => {
+    console.log('Iniciando login para:', email);
+    
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password
     });
     
+    if (error) {
+      console.error('Erro no login:', error);
+    } else {
+      console.log('Login realizado com sucesso');
+    }
+    
     return { error };
   };
 
   const signOut = async () => {
+    console.log('Fazendo logout...');
     await supabase.auth.signOut();
   };
 

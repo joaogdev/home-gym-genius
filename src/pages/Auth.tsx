@@ -34,24 +34,44 @@ const Auth = () => {
       let result;
       
       if (isLogin) {
+        console.log('Tentando fazer login com:', { email });
         result = await signIn(email, password);
+        
+        if (result.error) {
+          console.error('Erro no login:', result.error);
+          toast({
+            title: "Erro no login",
+            description: getErrorMessage(result.error.message),
+            variant: "destructive",
+          });
+        } else {
+          console.log('Login realizado com sucesso');
+          toast({
+            title: "Sucesso!",
+            description: "Login realizado com sucesso.",
+          });
+        }
       } else {
+        console.log('Tentando criar conta com:', { email, fullName });
         result = await signUp(email, password, fullName);
-      }
-
-      if (result.error) {
-        toast({
-          title: "Erro",
-          description: result.error.message,
-          variant: "destructive",
-        });
-      } else if (!isLogin) {
-        toast({
-          title: "Conta criada!",
-          description: "Verifique seu email para confirmar a conta.",
-        });
+        
+        if (result.error) {
+          console.error('Erro no cadastro:', result.error);
+          toast({
+            title: "Erro no cadastro",
+            description: getErrorMessage(result.error.message),
+            variant: "destructive",
+          });
+        } else {
+          console.log('Conta criada com sucesso');
+          toast({
+            title: "Conta criada!",
+            description: "Verifique seu email para confirmar a conta.",
+          });
+        }
       }
     } catch (error) {
+      console.error('Erro inesperado:', error);
       toast({
         title: "Erro",
         description: "Algo deu errado. Tente novamente.",
@@ -60,6 +80,29 @@ const Auth = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getErrorMessage = (errorMessage: string) => {
+    if (errorMessage.includes('Invalid login credentials')) {
+      return 'Email ou senha incorretos.';
+    }
+    if (errorMessage.includes('User already registered')) {
+      return 'Este email já está cadastrado. Tente fazer login.';
+    }
+    if (errorMessage.includes('Password should be at least 6 characters')) {
+      return 'A senha deve ter pelo menos 6 caracteres.';
+    }
+    if (errorMessage.includes('Invalid email')) {
+      return 'Email inválido.';
+    }
+    return errorMessage;
+  };
+
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    setEmail('');
+    setPassword('');
+    setFullName('');
   };
 
   return (
@@ -117,6 +160,7 @@ const Auth = () => {
                 className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 pr-10"
                 placeholder="••••••••"
                 required
+                minLength={6}
               />
               <button
                 type="button"
@@ -140,12 +184,7 @@ const Auth = () => {
         <div className="mt-6 text-center">
           <button
             type="button"
-            onClick={() => {
-              setIsLogin(!isLogin);
-              setEmail('');
-              setPassword('');
-              setFullName('');
-            }}
+            onClick={toggleMode}
             className="text-purple-300 hover:text-white transition-colors duration-200"
           >
             {isLogin ? 'Não tem uma conta? Cadastre-se' : 'Já tem uma conta? Faça login'}
